@@ -24,8 +24,8 @@ def fetch_weather_data(api_key, location, start_date, end_date):
         print(f"Failed to retrieve data: {response.status_code}")
         return {}
 
-# Find the last stored date in the database
-def get_last_stored_date(db_name="pollution_and_weather_data.db"):  # Changed default to pollution_and_weather_data.db to match Air_pollution db 
+# Function to find the last stored date in the database
+def get_last_stored_date(db_name="pollution_and_weather_data.db"):
     conn = sqlite3.connect(db_name)
     cursor = conn.cursor()
 
@@ -57,7 +57,7 @@ def get_last_stored_date(db_name="pollution_and_weather_data.db"):  # Changed de
     return datetime.strptime(result, "%Y-%m-%d")
 
 # Function to store weather data in SQLite
-def store_weather_data_in_db(weather_data, db_name="pollution_and_weather_data.db"):  # Changed default to pollution_and_weather_data.db
+def store_weather_data_in_db(weather_data, db_name="pollution_and_weather_data.db"):
     conn = sqlite3.connect(db_name)
     cursor = conn.cursor()
 
@@ -128,7 +128,11 @@ if __name__ == "__main__":
 
     # Find the last stored date and calculate the next 25 days
     last_date = get_last_stored_date(db_name="pollution_and_weather_data.db")  # Explicitly pass the new database name
-    start_date = last_date  # Don't add a day if it's the first run
+    if last_date == datetime(2021, 1, 1):  # If first run, start at Jan 1, 2021
+        start_date = last_date
+    else:
+        start_date = last_date + timedelta(days=1)  # Always start from the next day
+
     end_date = start_date + timedelta(days=24)  # Fetch 25 days
 
     # Format dates for API
