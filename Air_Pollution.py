@@ -57,44 +57,49 @@ def store_air_quality_data(data):
         timestamp = item['dt']
         formatted_date = convert_timestamp(timestamp)
 
-        if formatted_date in seen_timestamps:
-            print(f"Duplicate timestamp in API data: {formatted_date}")
-            continue
-        seen_timestamps.add(formatted_date) 
+        dt_object = datetime.fromtimestamp(timestamp, tz=timezone.utc)
 
-        cur.execute("SELECT COUNT(*) FROM air_pollution WHERE timestamp = ?", (formatted_date,))
-        count = cur.fetchone()[0]
+        hour = dt_object.strftime("%H")
 
-        if count > 0:
+        if hour == "12":
+            if formatted_date in seen_timestamps:
+                print(f"Duplicate timestamp in API data: {formatted_date}")
+                continue
+            seen_timestamps.add(formatted_date) 
+
+            cur.execute("SELECT COUNT(*) FROM air_pollution WHERE timestamp = ?", (formatted_date,))
+            count = cur.fetchone()[0]
+
+            if count > 0:
                 skipped_items += 1
                 print(f"Skipping timestamp {formatted_date} as it's already in the database.")
                 continue
         
-        components = item['components']
-        aqi = item.get('main', {}).get('aqi')
+            components = item['components']
+            aqi = item.get('main', {}).get('aqi')
 
-        try:
-            cur.execute('''
-            INSERT INTO air_pollution (latitude, longitude, aqi, co, no, no2, o3, so2, pm2_5, pm10, nh3, timestamp)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)''', 
-            (
-                42.3314,
-                -83.0458,
-                aqi,
-                components.get('co'),
-                components.get('no'),
-                components.get('no2'),
-                components.get('o3'),
-                components.get('so2'),
-                components.get('pm2_5'),
-                components.get('pm10'),
-                components.get('nh3'),
-                formatted_date
-            ))
+            try:
+                cur.execute('''
+                INSERT INTO air_pollution (latitude, longitude, aqi, co, no, no2, o3, so2, pm2_5, pm10, nh3, timestamp)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)''', 
+                (
+                    42.3314,
+                    -83.0458,
+                    aqi,
+                    components.get('co'),
+                    components.get('no'),
+                    components.get('no2'),
+                    components.get('o3'),
+                    components.get('so2'),
+                    components.get('pm2_5'),
+                    components.get('pm10'),
+                    components.get('nh3'),
+                    formatted_date
+                ))
 
-        except sqlite3.IntegrityError as e:
-            print(f"Error inserting data: {e}")
-            continue
+            except sqlite3.IntegrityError as e:
+                print(f"Error inserting data: {e}")
+                continue
 
     print(f"Skipping {skipped_items} existing rows.")
     
