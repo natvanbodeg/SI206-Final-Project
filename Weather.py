@@ -25,7 +25,7 @@ def fetch_weather_data(api_key, location, start_date, end_date):
         return {}
 
 # Find the last stored date in the database
-def get_last_stored_date(db_name="project_data.db"):  # Changed default to project_data.db
+def get_last_stored_date(db_name="pollution_and_weather_data.db"):  # Changed default to pollution_and_weather_data.db to match Air_pollution db 
     conn = sqlite3.connect(db_name)
     cursor = conn.cursor()
 
@@ -57,7 +57,7 @@ def get_last_stored_date(db_name="project_data.db"):  # Changed default to proje
     return datetime.strptime(result, "%Y-%m-%d")
 
 # Function to store weather data in SQLite
-def store_weather_data_in_db(weather_data, db_name="project_data.db"):  # Changed default to project_data.db
+def store_weather_data_in_db(weather_data, db_name="pollution_and_weather_data.db"):  # Changed default to pollution_and_weather_data.db
     conn = sqlite3.connect(db_name)
     cursor = conn.cursor()
 
@@ -127,7 +127,7 @@ if __name__ == "__main__":
     location = "Detroit, United States"
 
     # Find the last stored date and calculate the next 25 days
-    last_date = get_last_stored_date(db_name="project_data.db")  # Explicitly pass the new database name
+    last_date = get_last_stored_date(db_name="pollution_and_weather_data.db")  # Explicitly pass the new database name
     start_date = last_date  # Don't add a day if it's the first run
     end_date = start_date + timedelta(days=24)  # Fetch 25 days
 
@@ -140,7 +140,7 @@ if __name__ == "__main__":
     weather_data = fetch_weather_data(WEATHER_API_KEY, location, start_date_str, end_date_str)
 
     if weather_data:
-        store_weather_data_in_db(weather_data, db_name="project_data.db")  # Explicitly pass the new database name
+        store_weather_data_in_db(weather_data, db_name="pollution_and_weather_data.db")  # Explicitly pass the new database name
         print("Process completed successfully.")
     else:
         print("No weather data found.")
