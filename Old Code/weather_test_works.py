@@ -24,7 +24,7 @@ def fetch_weather_data(api_key, location, start_date, end_date):
         print(f"Failed to retrieve data: {response.status_code}")
         return {}
 
-# Function to find the last stored date in the database
+# Find the last stored date in the database
 def get_last_stored_date(db_name="weather_data.db"):
     conn = sqlite3.connect(db_name)
     cursor = conn.cursor()
@@ -35,19 +35,19 @@ def get_last_stored_date(db_name="weather_data.db"):
     """)
     table_exists = cursor.fetchone()
 
-    if not table_exists:  # Table does not exist, so reset to January 1, 2020
-        print("Weather table does not exist. Starting from January 1, 2020.")
+    if not table_exists:  # Table does not exist, so reset to January 1, 2021
+        print("Weather table does not exist. Starting from January 1, 2021.")
         conn.close()
-        return datetime(2020, 1, 1)
+        return datetime(2021, 1, 1)
 
     # If table exists, check if rows are present
     cursor.execute("SELECT COUNT(*) FROM Weather")
     count = cursor.fetchone()[0]
 
     if count == 0:  # Table is empty
-        print("No data found in the table. Starting from January 1, 2020.")
+        print("No data found in the table. Starting from January 1, 2021.")
         conn.close()
-        return datetime(2020, 1, 1)
+        return datetime(2021, 1, 1)
 
     # Query to get the latest date
     cursor.execute("SELECT MAX(date) FROM Weather")
@@ -64,7 +64,7 @@ def store_weather_data_in_db(weather_data, db_name="weather_data.db"):
     # Table schema with an auto-incrementing ID field
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS Weather (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        weather_id INTEGER PRIMARY KEY AUTOINCREMENT,
         date TEXT UNIQUE,
         mintemp REAL,
         maxtemp REAL,
@@ -144,4 +144,3 @@ if __name__ == "__main__":
         print("Process completed successfully.")
     else:
         print("No weather data found.")
-
