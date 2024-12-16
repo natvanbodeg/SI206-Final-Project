@@ -64,7 +64,7 @@ def store_weather_data_in_db(weather_data, db_name="pollution_and_weather_data.d
     # Table schema with an auto-incrementing ID field
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS Weather (
-        weather_id INTEGER PRIMARY KEY AUTOINCREMENT,
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
         date TEXT UNIQUE,
         mintemp REAL,
         maxtemp REAL,
@@ -122,7 +122,7 @@ def store_weather_data_in_db(weather_data, db_name="pollution_and_weather_data.d
 
 # Main execution
 if __name__ == "__main__":
-    # Replace with your actual API key
+
     WEATHER_API_KEY = "0b6eb37ce8265b86413953582aa20ee8"
     location = "Detroit, United States"
 
