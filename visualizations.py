@@ -57,5 +57,44 @@ plt.grid(True)
 plt.tight_layout()
 
 # Save and show the plot
-plt.savefig("line_plot_formatted.png")  # Save the line plot as a PNG file
+plt.savefig("line_plot_formatted.png")
+plt.show()
+
+
+# 3. Box Plot: Comparison of Temperature and Pollution Level Distribution
+plt.figure(figsize=(10, 6))
+
+# Create a box plot for the two variables (temperature and pollution levels)
+plt.boxplot([avg_temperatures, avg_pollution_levels], vert=False, patch_artist=True, 
+            labels=["Average Temperature (°C)", "Average Pollution Level"], 
+            boxprops=dict(facecolor='lightblue'))
+
+# Add a title and  x-label
+plt.title("Distribution of Average Temperature and Pollution Level")
+plt.xlabel("Value")
+
+# Save and show the plot
+plt.savefig("box_plot_temperature_pollution.png")
+plt.show()
+
+
+# 4. Histogram: Distribution of Average Temperature and Pollution Level
+plt.figure(figsize=(10, 6))
+
+# Plot histogram for average temperature
+plt.hist(avg_temperatures, bins=30, alpha=0.5, label="Average Temperature (°C)", color='red', density=True)
+
+# Plot histogram for average pollution level
+plt.hist(avg_pollution_levels, bins=15, alpha=0.5, label="Average Pollution Level", color='green', density=True)
+
+# Add a title and labels
+plt.title("Histogram of Average Temperature and Pollution Level")
+plt.xlabel("Value")
+plt.ylabel("Density")
+
+# Show the legend
+plt.legend()
+
+# Save and show the plot
+plt.savefig("histogram_temperature_pollution.png")
 plt.show()
