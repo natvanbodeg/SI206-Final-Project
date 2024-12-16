@@ -49,7 +49,7 @@ plt.xticks(rotation=45)  # Rotate x-axis labels for better readability
 # Format the x-axis labels to only show day, month, and year
 plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%Y-%m-%d'))
 
-# Optionally, set the x-axis ticks to appear at a specific interval (e.g., every 5th day)
+# Set the x-axis ticks to appear at a specific interval (e.g., every 5th day)
 plt.gca().xaxis.set_major_locator(mdates.DayLocator(interval=5))
 
 plt.legend()
